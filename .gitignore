@@ -1,0 +1,7 @@
+# Binaries and coverage
+*.test
+*.out
+
+# IDE
+.idea/
+.vscode/
