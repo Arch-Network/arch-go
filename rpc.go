@@ -211,8 +211,10 @@ func (c *Client) RequestAirdrop(pubkey Pubkey) error {
 }
 
 // CreateAccountWithFaucet asks the node to build a faucet-funded account
-// creation transaction (regtest/testnet only). The returned transaction must
-// still be submitted with SendTransaction.
+// creation transaction (regtest/testnet only). The returned transaction is
+// signed by the faucet but requires the created account's co-signature:
+// append SignMessageBIP322(priv, tx.Message.Hash()) to tx.Signatures, then
+// submit it with SendTransaction.
 func (c *Client) CreateAccountWithFaucet(pubkey Pubkey) (RuntimeTransaction, error) {
 	return call[RuntimeTransaction](c, MethodCreateAccountWithFaucet, pubkey)
 }

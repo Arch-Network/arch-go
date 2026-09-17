@@ -1,7 +1,9 @@
 package arch
 
 import (
+	"crypto/sha256"
 	"encoding/binary"
+	"encoding/hex"
 	"fmt"
 
 	"github.com/btcsuite/btcd/btcec/v2"
@@ -19,6 +21,17 @@ func (tx RuntimeTransaction) Serialize() []byte {
 		buf = append(buf, sig[:]...)
 	}
 	return append(buf, tx.Message.Serialize()...)
+}
+
+// TxID returns the transaction id as a hex string:
+// hex(sha256(hex(sha256(serialize(tx))))), matching arch_sdk's
+// RuntimeTransaction::txid (the same hash-the-hex-string construction as the
+// message signing digest).
+func (tx RuntimeTransaction) TxID() string {
+	first := sha256.Sum256(tx.Serialize())
+	firstHex := []byte(hex.EncodeToString(first[:]))
+	second := sha256.Sum256(firstHex)
+	return hex.EncodeToString(second[:])
 }
 
 // BuildAndSignTransaction hashes the message and produces one BIP-322
