@@ -1,10 +1,25 @@
 package arch
 
 import (
+	"encoding/binary"
 	"fmt"
 
 	"github.com/btcsuite/btcd/btcec/v2"
 )
+
+// Serialize encodes the transaction in the Arch binary format: version
+// (u32 LE), signature count (single byte), signatures (64 bytes each), and
+// the serialized message. This matches arch_sdk's
+// RuntimeTransaction::serialize.
+func (tx RuntimeTransaction) Serialize() []byte {
+	buf := make([]byte, 0, 4+1+len(tx.Signatures)*64+256)
+	buf = binary.LittleEndian.AppendUint32(buf, tx.Version)
+	buf = append(buf, uint8(len(tx.Signatures)))
+	for _, sig := range tx.Signatures {
+		buf = append(buf, sig[:]...)
+	}
+	return append(buf, tx.Message.Serialize()...)
+}
 
 // BuildAndSignTransaction hashes the message and produces one BIP-322
 // signature per required signer, mirroring arch-network's
