@@ -132,7 +132,7 @@ func TestSendTransactions(t *testing.T) {
 
 func TestReadAccountInfo(t *testing.T) {
 	// Fixture from rpc_wire_format.rs account_info_response_deserialization.
-	client, req := newMockNode(t, `{"lamports":1000000,"owner":`+zeros32JSON+`,"data":[1,2,3,4],"utxo":"abc123:0","is_executable":false}`)
+	client, req := newMockNode(t, `{"lamports":1000000,"owner":`+zeros32JSON+`,"data":[1,2,3,4],"is_executable":false}`)
 
 	info, err := client.ReadAccountInfo(pk(1))
 	if err != nil {
@@ -148,7 +148,7 @@ func TestReadAccountInfo(t *testing.T) {
 		t.Errorf("params[0] = %d, want 1", arr[0])
 	}
 
-	if info.Lamports != 1000000 || info.Utxo != "abc123:0" || info.IsExecutable {
+	if info.Lamports != 1000000 || info.IsExecutable {
 		t.Errorf("info = %+v", info)
 	}
 	if len(info.Data) != 4 || info.Data[3] != 4 {
@@ -272,7 +272,7 @@ func TestGetBlockCountAndHash(t *testing.T) {
 
 func TestGetProcessedTransaction(t *testing.T) {
 	// Fixture from rpc_wire_format.rs minimal_processed_tx_json.
-	result := `{"runtime_transaction":{"version":0,"signatures":[],"message":{"header":{"num_required_signatures":0,"num_readonly_signed_accounts":0,"num_readonly_unsigned_accounts":0},"account_keys":[],"recent_blockhash":` + zeros32JSON + `,"instructions":[]}},"status":{"type":"failed","message":"out of gas"},"bitcoin_txid":null,"logs":["Program log: hello"],"rollback_status":{"type":"notRolledback"},"inner_instructions_list":[]}`
+	result := `{"runtime_transaction":{"version":0,"signatures":[],"message":{"header":{"num_required_signatures":0,"num_readonly_signed_accounts":0,"num_readonly_unsigned_accounts":0},"account_keys":[],"recent_blockhash":` + zeros32JSON + `,"instructions":[]}},"status":{"type":"failed","message":"out of gas"},"bitcoin_txid":null,"logs":["Program log: hello"],"inner_instructions_list":[]}`
 	client, req := newMockNode(t, result)
 
 	tx, err := client.GetProcessedTransaction("aabbcc")
@@ -295,15 +295,12 @@ func TestGetProcessedTransaction(t *testing.T) {
 	if len(tx.Logs) != 1 || tx.Logs[0] != "Program log: hello" {
 		t.Errorf("logs = %v", tx.Logs)
 	}
-	if tx.RollbackStatus.Type != RollbackStatusNotRolledback {
-		t.Errorf("rollback = %+v", tx.RollbackStatus)
-	}
 }
 
 func TestGetProgramAccounts(t *testing.T) {
 	// Fixture from rpc_wire_format.rs program_account_response_deserialization.
 	fives := "[" + strings.Repeat("5,", 31) + "5]"
-	client, req := newMockNode(t, `[{"pubkey":`+fives+`,"account":{"lamports":999,"owner":`+zeros32JSON+`,"data":[10,20],"utxo":"txid:1","is_executable":true}}]`)
+	client, req := newMockNode(t, `[{"pubkey":`+fives+`,"account":{"lamports":999,"owner":`+zeros32JSON+`,"data":[10,20],"is_executable":true}}]`)
 
 	accounts, err := client.GetProgramAccounts(pk(1), []AccountFilter{DataSizeFilter(64)})
 	if err != nil {
@@ -359,7 +356,7 @@ func TestRequestAirdropAndFaucet(t *testing.T) {
 }
 
 func TestGetMultipleAccounts(t *testing.T) {
-	client, req := newMockNode(t, `[{"key":`+zeros32JSON+`,"lamports":500,"owner":`+zeros32JSON+`,"data":[],"utxo":"","is_executable":false},null]`)
+	client, req := newMockNode(t, `[{"key":`+zeros32JSON+`,"lamports":500,"owner":`+zeros32JSON+`,"data":[],"is_executable":false},null]`)
 
 	accounts, err := client.GetMultipleAccounts([]Pubkey{pk(1), pk(2)})
 	if err != nil {

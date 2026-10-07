@@ -327,16 +327,3 @@ func CreateAssociatedTokenAccount(funder, associatedTokenAccount, wallet, mint P
 		Data: Bytes{},
 	}
 }
-
-// CreateAssociatedTokenAccountWithAnchor is CreateAssociatedTokenAccount with
-// the new account anchored to a Bitcoin UTXO.
-func CreateAssociatedTokenAccountWithAnchor(funder, associatedTokenAccount, wallet, mint Pubkey, txid string, vout uint32) (Instruction, error) {
-	txidBytes, err := decodeTxid(txid)
-	if err != nil {
-		return Instruction{}, err
-	}
-	ix := CreateAssociatedTokenAccount(funder, associatedTokenAccount, wallet, mint)
-	data := append([]byte{}, txidBytes...)
-	ix.Data = binary.LittleEndian.AppendUint32(data, vout)
-	return ix, nil
-}

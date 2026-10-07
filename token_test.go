@@ -273,19 +273,3 @@ func TestCreateAssociatedTokenAccount(t *testing.T) {
 		{Pubkey: TokenProgramID},
 	})
 }
-
-func TestCreateAssociatedTokenAccountWithAnchor(t *testing.T) {
-	txid := "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-	ix, err := CreateAssociatedTokenAccountWithAnchor(pk(1), pk(2), pk(7), pk(9), txid, 3)
-	if err != nil {
-		t.Fatal(err)
-	}
-	wantData := txid + "03000000"
-	if got := hex.EncodeToString(ix.Data); got != wantData {
-		t.Errorf("data = %s, want %s", got, wantData)
-	}
-
-	if _, err := CreateAssociatedTokenAccountWithAnchor(pk(1), pk(2), pk(7), pk(9), "beef", 0); err == nil {
-		t.Error("expected error for short txid")
-	}
-}

@@ -161,7 +161,7 @@ func TestLiveTestnet(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read_account_info(funded): %v", err)
 	}
-	t.Logf("funded account: %d lamports, owner %s, utxo %s", funded.Lamports, funded.Owner, funded.Utxo)
+	t.Logf("funded account: %d lamports, owner %s", funded.Lamports, funded.Owner)
 	if funded.Lamports == 0 {
 		t.Fatal("faucet account has no lamports")
 	}
