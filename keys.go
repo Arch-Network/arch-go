@@ -66,8 +66,8 @@ func NetworkPubkeyFromHex(s string) (Pubkey, error) {
 
 // AccountAddress derives the Bitcoin address of an Arch account offline — the
 // same address the node reports via get_account_address, mirroring
-// arch-network's build_account_address (as of v0.10.0). The account's UTXO is
-// a taproot output whose internal key is the network's distributed signing
+// arch-network's build_account_address (as of v0.12.0). The address is a
+// taproot output whose internal key is the network's distributed signing
 // (FROST) pubkey and whose script tree is the single leaf
 // <network_key> OP_CHECKSIG OP_FALSE OP_IF <account_pubkey> OP_ENDIF
 // (the OP_FALSE makes the account-pubkey block a dead data envelope).

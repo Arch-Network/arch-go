@@ -137,10 +137,13 @@ node errors surface as `*arch.RPCError` with the node's code and message.
 
 ## System program instructions
 
-Builders for every system instruction: `CreateAccount`,
-`CreateAccountWithAnchor` (anchor an account to a Bitcoin UTXO), `Assign`,
-`Anchor`, `SignInput`, `Transfer`, `Allocate`, `CreateAccountWithSeed`,
-`AllocateWithSeed`, `AssignWithSeed`, `TransferWithSeed`. Program-ID
+Builders for every system instruction: `CreateAccount`, `Assign`,
+`SignInput`, `Transfer`, `Allocate`, `CreateAccountWithSeed`,
+`AllocateWithSeed`, `AssignWithSeed`, `TransferWithSeed`, and the durable
+nonce instructions `CreateNonceAccount` / `InitializeNonceAccount`,
+`AdvanceNonceAccount`, `WithdrawNonceAccount`, `AuthorizeNonceAccount`. A
+transaction whose first instruction is `AdvanceNonceAccount` uses the stored
+nonce as its recent blockhash instead of a recent block hash. Program-ID
 constants for the token, associated-token, BPF-loader, vote, stake,
 compute-budget, and native-loader programs are in `constants.go`.
 
@@ -151,8 +154,7 @@ token account program: `TokenInitializeMint`(`2`), `TokenInitializeAccount`
 (`2`/`3`), `TokenInitializeMultisig`, `TokenTransfer`, `TokenApprove`,
 `TokenRevoke`, `TokenSetAuthority`, `TokenMintTo`, `TokenBurn`,
 `TokenCloseAccount`, `TokenFreezeAccount`, `TokenThawAccount`, the `*Checked`
-variants, `TokenSyncNative`, and `CreateAssociatedTokenAccount`
-(`WithAnchor`). Pass `nil` multisig signers for a single-key authority, or the
+variants, `TokenSyncNative`, and `CreateAssociatedTokenAccount`. Pass `nil` multisig signers for a single-key authority, or the
 signer set when the authority is a multisig account.
 
 ```go

@@ -171,14 +171,6 @@ func TestStatusDeserialization(t *testing.T) {
 	if s.Type != StatusFailed || s.Message != "out of gas" {
 		t.Errorf("failed status = %+v", s)
 	}
-
-	var rb RollbackStatus
-	if err := json.Unmarshal([]byte(`{"type":"rolledback","message":"conflict detected"}`), &rb); err != nil {
-		t.Fatal(err)
-	}
-	if rb.Type != RollbackStatusRolledback || rb.Message != "conflict detected" {
-		t.Errorf("rollback status = %+v", rb)
-	}
 }
 
 func TestProcessedTransactionRoundTrip(t *testing.T) {
@@ -195,7 +187,6 @@ func TestProcessedTransactionRoundTrip(t *testing.T) {
 		Status:                ProcessedTransactionStatus{Type: StatusFailed, Message: "test error"},
 		BitcoinTxid:           &txid,
 		Logs:                  []string{"log1", "log2"},
-		RollbackStatus:        RollbackStatus{Type: RollbackStatusRolledback, Message: "reason"},
 		InnerInstructionsList: [][]InnerInstruction{},
 	}
 
@@ -213,7 +204,7 @@ func TestProcessedTransactionRoundTrip(t *testing.T) {
 
 	// bitcoin_txid: null must decode to nil.
 	var pt3 ProcessedTransaction
-	fixture := `{"runtime_transaction":{"version":0,"signatures":[],"message":{"header":{"num_required_signatures":0,"num_readonly_signed_accounts":0,"num_readonly_unsigned_accounts":0},"account_keys":[],"recent_blockhash":` + zeros32JSON + `,"instructions":[]}},"status":{"type":"processed"},"bitcoin_txid":null,"logs":[],"rollback_status":{"type":"notRolledback"},"inner_instructions_list":[]}`
+	fixture := `{"runtime_transaction":{"version":0,"signatures":[],"message":{"header":{"num_required_signatures":0,"num_readonly_signed_accounts":0,"num_readonly_unsigned_accounts":0},"account_keys":[],"recent_blockhash":` + zeros32JSON + `,"instructions":[]}},"status":{"type":"processed"},"bitcoin_txid":null,"logs":[],"inner_instructions_list":[]}`
 	if err := json.Unmarshal([]byte(fixture), &pt3); err != nil {
 		t.Fatal(err)
 	}

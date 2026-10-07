@@ -139,8 +139,8 @@ func (c *Client) SendTransactions(txs []RuntimeTransaction) ([]string, error) {
 	return call[[]string](c, MethodSendTransactions, txs)
 }
 
-// ReadAccountInfo fetches an account's lamports, owner, data, and anchoring
-// UTXO.
+// ReadAccountInfo fetches an account's lamports, owner, data, and executable
+// flag.
 func (c *Client) ReadAccountInfo(pubkey Pubkey) (AccountInfo, error) {
 	return call[AccountInfo](c, MethodReadAccountInfo, pubkey)
 }

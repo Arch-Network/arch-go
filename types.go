@@ -18,7 +18,6 @@ type AccountInfo struct {
 	Lamports     uint64 `json:"lamports"`
 	Owner        Pubkey `json:"owner"`
 	Data         Bytes  `json:"data"`
-	Utxo         string `json:"utxo"`
 	IsExecutable bool   `json:"is_executable"`
 }
 
@@ -29,7 +28,6 @@ type AccountInfoWithPubkey struct {
 	Lamports     uint64 `json:"lamports"`
 	Owner        Pubkey `json:"owner"`
 	Data         Bytes  `json:"data"`
-	Utxo         string `json:"utxo"`
 	IsExecutable bool   `json:"is_executable"`
 }
 
@@ -82,19 +80,6 @@ type ProcessedTransactionStatus struct {
 	Message string `json:"message,omitempty"`
 }
 
-// Rollback status type tags.
-const (
-	RollbackStatusNotRolledback = "notRolledback"
-	RollbackStatusRolledback    = "rolledback"
-)
-
-// RollbackStatus reports whether a transaction was rolled back due to a
-// Bitcoin reorg. Message is set only for the rolledback variant.
-type RollbackStatus struct {
-	Type    string `json:"type"`
-	Message string `json:"message,omitempty"`
-}
-
 // InnerInstruction is an instruction invoked via CPI during execution.
 type InnerInstruction struct {
 	Instruction SanitizedInstruction `json:"instruction"`
@@ -107,7 +92,6 @@ type ProcessedTransaction struct {
 	Status                ProcessedTransactionStatus `json:"status"`
 	BitcoinTxid           *Hash                      `json:"bitcoin_txid"`
 	Logs                  []string                   `json:"logs"`
-	RollbackStatus        RollbackStatus             `json:"rollback_status"`
 	InnerInstructionsList [][]InnerInstruction       `json:"inner_instructions_list"`
 }
 
